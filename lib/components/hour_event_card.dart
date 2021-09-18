@@ -2,6 +2,9 @@ import 'package:easistent_client/easistent_client.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+Color _whiten(Color color) =>
+    Color.alphaBlend(color.withAlpha(60), Colors.white);
+
 class HourEventCard extends StatelessWidget {
   final SchoolHourEvent event;
 
@@ -9,12 +12,40 @@ class HourEventCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Card(
-        color: event.color,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 14),
+        color: _whiten(event.color),
+        shadowColor: event.color,
+        child: _HourEventContent(event: event),
+      );
+}
+
+class HourEventContainer extends StatelessWidget {
+  final SchoolHourEvent event;
+
+  const HourEventContainer({Key? key, required this.event}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => Container(
+        color: _whiten(event.color),
+        child: _HourEventContent(event: event),
+      );
+}
+
+class _HourEventContent extends StatelessWidget {
+  static const _color = Color(0xbb000000);
+
+  final SchoolHourEvent event;
+
+  const _HourEventContent({Key? key, required this.event}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 14),
+        child: IconTheme(
+          data: const IconThemeData(size: 16, color: _color),
           child: DefaultTextStyle(
-            style: const TextStyle(color: Colors.white),
+            style: const TextStyle(color: _color),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -56,13 +87,7 @@ class _SubInfo extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 4),
         child: Row(
           children: [
-            IconTheme(
-              data: const IconThemeData(
-                color: Colors.white,
-                size: 16,
-              ),
-              child: icon,
-            ),
+            icon,
             const SizedBox(width: 3),
             text,
           ],

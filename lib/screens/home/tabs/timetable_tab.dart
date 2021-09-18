@@ -2,30 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:o_asistent/components/hour_event_card.dart';
-import 'package:o_asistent/repositories/eas_repository.dart';
 import 'package:o_asistent/cubit/time_table_cubit.dart';
-import 'package:o_asistent/screens/time_table/cubit/date_selector_cubit.dart';
+import 'package:o_asistent/repositories/eas_repository.dart';
+import 'package:o_asistent/screens/home/cubit/date_selector_cubit.dart';
 
-class TimeTableScreen extends StatelessWidget {
-  const TimeTableScreen({Key? key}) : super(key: key);
+class TimeTableTab extends StatelessWidget {
+  const TimeTableTab({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: const Text('Urnik')),
-        body: MultiBlocProvider(
-          providers: [
-            BlocProvider(create: (context) => DateSelectorCubit()),
-            BlocProvider(
-              create: (context) => TimeTableCubit(context.read<EAsRepository>())
-                ..setDate(DateTime.now()),
-            ),
-          ],
-          child: BlocListener<DateSelectorCubit, DateTime>(
-            listener: (context, state) {
-              context.read<TimeTableCubit>().setDate(state);
-            },
-            child: const _TimeTable(),
+  Widget build(BuildContext context) => MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (context) => DateSelectorCubit()),
+          BlocProvider(
+            create: (context) => TimeTableCubit(context.read<EAsRepository>())
+              ..setDate(DateTime.now()),
           ),
+        ],
+        child: BlocListener<DateSelectorCubit, DateTime>(
+          listener: (context, state) {
+            context.read<TimeTableCubit>().setDate(state);
+          },
+          child: const _TimeTable(),
         ),
       );
 }
@@ -73,7 +70,11 @@ class _TimeTable extends StatelessWidget {
                   );
                 }
 
-                return const Center(child: Icon(Icons.error));
+                return ListView(
+                  children: const [
+                    Center(child: Icon(Icons.error)),
+                  ],
+                );
               },
             )
           ],

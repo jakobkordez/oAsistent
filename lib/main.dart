@@ -49,14 +49,18 @@ class _AppState extends State<App> {
         },
         child: MaterialApp(
           title: 'oAsistent',
+          theme: ThemeData(
+            cardTheme: CardTheme(
+                shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            )),
+          ),
           navigatorKey: _navKey,
           initialRoute: _getRoute(context.read<AuthCubit>().state),
           routes: <String, WidgetBuilder>{
             '/splash': (context) => const SplashScreen(),
             '/home': (context) => const HomeScreen(),
             '/login': (context) => const LoginScreen(),
-            '/profile': (context) => const ProfileScreen(),
-            '/timetable': (context) => const TimeTableScreen(),
           },
           localizationsDelegates: const [
             GlobalMaterialLocalizations.delegate,

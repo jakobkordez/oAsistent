@@ -93,7 +93,9 @@ class _PasswordInput extends StatelessWidget {
           initialValue: state.password.value,
           onChanged: (value) => context.read<LoginCubit>().setPassword(value),
           textInputAction: TextInputAction.done,
-          onFieldSubmitted: (_) => context.read<LoginCubit>().submit(),
+          onFieldSubmitted: state.status.isValid
+              ? (_) => context.read<LoginCubit>().submit()
+              : null,
           obscureText: true,
           decoration: const InputDecoration(
             labelText: 'Geslo',

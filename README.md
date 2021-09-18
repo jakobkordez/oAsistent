@@ -4,4 +4,4 @@
 
 <h1 align="center">oAsistent</h1>
 
-<h3 align="center">An open-source eAsistent flutter app.</h3>
+<h3 align="center">An open-source eAsistent Flutter app.</h3>
