@@ -54,6 +54,9 @@ class _AppState extends State<App> {
                 shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             )),
+            snackBarTheme: const SnackBarThemeData(
+              behavior: SnackBarBehavior.floating,
+            ),
           ),
           navigatorKey: _navKey,
           initialRoute: _getRoute(context.read<AuthCubit>().state),

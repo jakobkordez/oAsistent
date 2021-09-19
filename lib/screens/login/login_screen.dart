@@ -4,6 +4,7 @@ import 'package:formz/formz.dart';
 import 'package:o_asistent/components/logo.dart';
 import 'package:o_asistent/cubit/auth_cubit.dart';
 import 'package:o_asistent/screens/login/cubit/login_cubit.dart';
+import 'package:o_asistent/screens/login/token_dialog.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -16,12 +17,13 @@ class LoginScreen extends StatelessWidget {
           child: BlocListener<LoginCubit, LoginState>(
             listener: (context, state) {
               if (state.error.isNotEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text(state.error),
-                  backgroundColor: Colors.red,
-                  behavior: SnackBarBehavior.floating,
-                  duration: const Duration(seconds: 10),
-                ));
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.error),
+                    backgroundColor: Colors.red,
+                    duration: const Duration(seconds: 10),
+                  ),
+                );
               }
             },
             child: const _LoginForm(),
@@ -68,23 +70,7 @@ class _LoginForm extends StatelessWidget {
 
   void _showTokenDialog(BuildContext context) => showDialog(
         context: context,
-        builder: (context) => SimpleDialog(
-          title: const Text('Token login'),
-          children: [
-            BlocBuilder<LoginCubit, LoginState>(
-              builder: (context, state) => TextFormField(
-                initialValue: state.token,
-                onChanged: (value) =>
-                    context.read<LoginCubit>().setToken(value),
-              ),
-            ),
-            const SizedBox(height: 5),
-            ElevatedButton(
-              onPressed: () => context.read<LoginCubit>().submitToken(),
-              child: const Text('Prijava'),
-            ),
-          ],
-        ),
+        builder: (context) => const TokenDialog(),
       );
 }
 

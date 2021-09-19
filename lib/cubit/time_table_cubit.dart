@@ -19,7 +19,7 @@ class TimeTableCubit extends Cubit<TimeTableState> {
     try {
       final timeTable = await eAsRepository.getTimeTable(datet, clearCache);
       emit(TimeTableLoaded(datet, timeTable));
-    } on EAsError catch (e, _) {
+    } on EAsError catch (e) {
       emit(TimeTableError(datet, e.userMessage ?? e.developerMessage));
     } catch (e) {
       emit(TimeTableError(datet, e.toString()));

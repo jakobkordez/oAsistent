@@ -3,34 +3,39 @@ import 'dart:ui';
 
 import 'package:easistent_client/easistent_client.dart';
 
-TimeTable generateTimeTable(DateTime date) => TimeTable(
-      List.generate(
-          15,
-          (index) => SchoolHourEvent(
-                DateTime(date.year, date.month, date.day, index + 7),
-                DateTime(date.year, date.month, date.day, index + 8),
-                _getRandomColor(),
-                _getRandomSubject(),
-                null,
-                [_getRandomDepartment()],
-                _getRandomClassroom(),
-                [_getRandomTeacher()],
-                [_getRandomGroup()],
-              )),
-      [],
-      [],
-    );
-
-final _schoolHours = List.generate(
-  15,
-  (index) => SchoolHour(
-    '$index',
-    '$index',
-    Time(index + 7),
-    Time(index + 8),
-    'type',
-  ),
-);
+TimeTable generateTimeTable(DateTime date) => date.weekday > 5
+    ? TimeTable([], [], [])
+    : TimeTable(
+        List.generate(
+            17,
+            (index) => [
+                  SchoolHourEvent(
+                    DateTime(date.year, date.month, date.day, index + 7),
+                    DateTime(date.year, date.month, date.day, index + 8),
+                    _getRandomColor(),
+                    _getRandomSubject(),
+                    null,
+                    [_getRandomDepartment()],
+                    _getRandomClassroom(),
+                    [_getRandomTeacher()],
+                    [_getRandomGroup()],
+                  ),
+                  if (Random().nextDouble() > 0.7)
+                    SchoolHourEvent(
+                      DateTime(date.year, date.month, date.day, index + 7),
+                      DateTime(date.year, date.month, date.day, index + 8),
+                      _getRandomColor(),
+                      _getRandomSubject(),
+                      null,
+                      [_getRandomDepartment()],
+                      _getRandomClassroom(),
+                      [_getRandomTeacher()],
+                      [_getRandomGroup()],
+                    ),
+                ]).expand((e) => e),
+        [],
+        [],
+      );
 
 const _subjects = [
   'MAT',

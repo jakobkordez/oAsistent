@@ -5,6 +5,7 @@ import 'package:o_asistent/components/hour_event_card.dart';
 import 'package:o_asistent/cubit/time_table_cubit.dart';
 import 'package:o_asistent/repositories/eas_repository.dart';
 import 'package:o_asistent/screens/home/cubit/date_selector_cubit.dart';
+import 'package:o_asistent/utils/group_util.dart';
 
 class TimeTableTab extends StatelessWidget {
   const TimeTableTab({Key? key}) : super(key: key);
@@ -15,7 +16,7 @@ class TimeTableTab extends StatelessWidget {
           BlocProvider(create: (context) => DateSelectorCubit()),
           BlocProvider(
             create: (context) => TimeTableCubit(context.read<EAsRepository>())
-              ..setDate(DateTime.now()),
+              ..setDate(context.read<DateSelectorCubit>().state),
           ),
         ],
         child: BlocListener<DateSelectorCubit, DateTime>(
@@ -39,10 +40,11 @@ class _TimeTable extends StatelessWidget {
             BlocConsumer<TimeTableCubit, TimeTableState>(
               listener: (context, state) {
                 if (state is TimeTableError) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(state.error),
-                    behavior: SnackBarBehavior.floating,
-                  ));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(state.error),
+                    ),
+                  );
                 }
               },
               builder: (context, state) {
@@ -63,8 +65,8 @@ class _TimeTable extends StatelessWidget {
                       children: [
                         // TODO Events
                         ...state.timeTable.schoolHourEvents
-                            .map((e) => HourEventCard(event: e))
-                            .toList(),
+                            .group((e) => e.timeFrom)
+                            .map((e) => HourEventsCard(events: e)),
                       ],
                     ),
                   );

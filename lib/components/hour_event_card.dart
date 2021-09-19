@@ -2,19 +2,45 @@ import 'package:easistent_client/easistent_client.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+// TODO events.count > 3
+
+String _hm(DateTime time) => DateFormat.Hm().format(time);
+
 Color _whiten(Color color) =>
     Color.alphaBlend(color.withAlpha(60), Colors.white);
 
-class HourEventCard extends StatelessWidget {
-  final SchoolHourEvent event;
+class HourEventsCard extends StatelessWidget {
+  final List<SchoolHourEvent> events;
 
-  const HourEventCard({Key? key, required this.event}) : super(key: key);
+  const HourEventsCard({Key? key, required this.events}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => Card(
-        color: _whiten(event.color),
-        shadowColor: event.color,
-        child: _HourEventContent(event: event),
+        shadowColor: events.length == 1 ? events.first.color : null,
+        child: ClipRRect(
+          borderRadius:
+              (Theme.of(context).cardTheme.shape as RoundedRectangleBorder)
+                  .borderRadius as BorderRadius,
+          child: HourEventsContainer(events: events),
+        ),
+      );
+}
+
+class HourEventsContainer extends StatelessWidget {
+  final List<SchoolHourEvent> events;
+
+  const HourEventsContainer({Key? key, required this.events}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: events
+              .map((e) => Expanded(
+                    child: HourEventContainer(event: e),
+                  ))
+              .toList(),
+        ),
       );
 }
 
@@ -43,54 +69,25 @@ class _HourEventContent extends StatelessWidget {
         child: IconTheme(
           data: const IconThemeData(size: 16, color: _color),
           child: DefaultTextStyle(
-            style: const TextStyle(color: _color),
+            style: const TextStyle(color: _color, fontSize: 16),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(event.subject, textScaleFactor: 1.4),
-                    Text('${_hm(event.timeFrom)} - ${_hm(event.timeTo)}')
-                  ],
+                Text(
+                  event.subject,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-                const SizedBox(height: 5),
-                _SubInfo(
-                  icon: const Icon(Icons.location_on),
-                  text: Text(event.classroom),
-                ),
-                _SubInfo(
-                  icon: const Icon(Icons.person),
-                  text: Text(event.teachers.join(', ')),
-                ),
+                const SizedBox(height: 6),
+                Text('${_hm(event.timeFrom)} - ${_hm(event.timeTo)}'),
+                const SizedBox(height: 6),
+                Text('${event.teachers.join(', ')}, ${event.classroom}'),
               ],
             ),
           ),
-        ),
-      );
-
-  static String _hm(DateTime time) => DateFormat.Hm().format(time);
-}
-
-class _SubInfo extends StatelessWidget {
-  final Widget icon;
-  final Widget text;
-
-  const _SubInfo({
-    Key? key,
-    required this.icon,
-    required this.text,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 4),
-        child: Row(
-          children: [
-            icon,
-            const SizedBox(width: 3),
-            text,
-          ],
         ),
       );
 }

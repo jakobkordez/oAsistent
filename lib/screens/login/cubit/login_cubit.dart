@@ -45,7 +45,7 @@ class LoginCubit extends Cubit<LoginState> {
 
       emit(state.copyWith(status: FormzStatus.submissionSuccess));
       authCubit.setLogin(login);
-    } on EAsError catch (e, _) {
+    } on EAsError catch (e) {
       emit(state.copyWith(
         status: FormzStatus.submissionFailure,
         error: e.userMessage ?? e.developerMessage,
@@ -61,7 +61,7 @@ class LoginCubit extends Cubit<LoginState> {
 
       emit(state.copyWith(status: FormzStatus.submissionSuccess));
       authCubit.setLogin(login);
-    } on EAsError catch (e, _) {
+    } on EAsError catch (e) {
       emit(state.copyWith(
         status: FormzStatus.submissionFailure,
         error: e.userMessage ?? e.developerMessage,
