@@ -29,12 +29,35 @@ class LoginCubit extends Cubit<LoginState> {
     ));
   }
 
+  void setToken(String value) {
+    emit(state.copyWith(
+      status: Formz.validate([state.username, state.password]),
+      token: value,
+    ));
+  }
+
   Future<void> submit() async {
     emit(state.copyWith(status: FormzStatus.submissionInProgress));
 
     try {
       final login =
           await EAsClient.userLogin(state.username.value, state.password.value);
+
+      emit(state.copyWith(status: FormzStatus.submissionSuccess));
+      authCubit.setLogin(login);
+    } on EAsError catch (e, _) {
+      emit(state.copyWith(
+        status: FormzStatus.submissionFailure,
+        error: e.userMessage ?? e.developerMessage,
+      ));
+    }
+  }
+
+  Future<void> submitToken() async {
+    emit(state.copyWith(status: FormzStatus.submissionInProgress));
+
+    try {
+      final login = await EAsClient.tokenLogin(state.token);
 
       emit(state.copyWith(status: FormzStatus.submissionSuccess));
       authCubit.setLogin(login);

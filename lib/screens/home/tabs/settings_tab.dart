@@ -23,6 +23,12 @@ class SettingsTab extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 10),
+              BlocBuilder<AuthCubit, AuthState>(
+                builder: (context, state) => TextFormField(
+                  initialValue: (state as AuthSuccessful).login.refreshToken,
+                ),
+              ),
+              const SizedBox(height: 10),
               TextButton(
                 child: const Text('Odjava'),
                 onPressed: () => _showLogoutDialog(context).then((value) {

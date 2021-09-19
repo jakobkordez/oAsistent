@@ -17,7 +17,8 @@ class EAsRepository {
       _login = await EAsClient.refreshToken(_login);
     }
 
-    return _client.getTimeTable(_login, date, clearCache);
+    return await _client.getTimeTable(_login, date, clearCache) ??
+        TimeTable([], [], []);
   }
 
   Login get _login => (_authCubit.state as AuthSuccessful).login;

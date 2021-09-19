@@ -40,7 +40,10 @@ class _LoginForm extends StatelessWidget {
             shrinkWrap: true,
             padding: const EdgeInsets.all(15),
             children: [
-              const Logo(),
+              GestureDetector(
+                onLongPress: () => _showTokenDialog(context),
+                child: const Logo(),
+              ),
               const SizedBox(height: 20),
               Card(
                 child: Padding(
@@ -60,6 +63,27 @@ class _LoginForm extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      );
+
+  void _showTokenDialog(BuildContext context) => showDialog(
+        context: context,
+        builder: (context) => SimpleDialog(
+          title: const Text('Token login'),
+          children: [
+            BlocBuilder<LoginCubit, LoginState>(
+              builder: (context, state) => TextFormField(
+                initialValue: state.token,
+                onChanged: (value) =>
+                    context.read<LoginCubit>().setToken(value),
+              ),
+            ),
+            const SizedBox(height: 5),
+            ElevatedButton(
+              onPressed: () => context.read<LoginCubit>().submitToken(),
+              child: const Text('Prijava'),
+            ),
+          ],
         ),
       );
 }
