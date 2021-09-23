@@ -9,33 +9,44 @@ TimeTable generateTimeTable(DateTime date) => date.weekday > 5
         List.generate(
             17,
             (index) => [
-                  SchoolHourEvent(
+                  getRandomHourEvent(
                     DateTime(date.year, date.month, date.day, index + 7),
                     DateTime(date.year, date.month, date.day, index + 8),
-                    _getRandomColor(),
-                    _getRandomSubject(),
-                    null,
-                    [_getRandomDepartment()],
-                    _getRandomClassroom(),
-                    [_getRandomTeacher()],
-                    [_getRandomGroup()],
                   ),
                   if (Random().nextDouble() > 0.7)
-                    SchoolHourEvent(
+                    getRandomHourEvent(
                       DateTime(date.year, date.month, date.day, index + 7),
                       DateTime(date.year, date.month, date.day, index + 8),
-                      _getRandomColor(),
-                      _getRandomSubject(),
-                      null,
-                      [_getRandomDepartment()],
-                      _getRandomClassroom(),
-                      [_getRandomTeacher()],
-                      [_getRandomGroup()],
+                    ),
+                  if (Random().nextDouble() > 0.9)
+                    getRandomHourEvent(
+                      DateTime(date.year, date.month, date.day, index + 7),
+                      DateTime(date.year, date.month, date.day, index + 8),
                     ),
                 ]).expand((e) => e),
         [],
         [],
       );
+
+SchoolHourEvent getRandomHourEvent(DateTime timeFrom, DateTime timeTo) =>
+    SchoolHourEvent(
+      timeFrom,
+      timeTo,
+      _getRandomColor(),
+      _getRandomSubject(),
+      _getSpecialHourType(),
+      [_getRandomDepartment()],
+      _getRandomClassroom(),
+      [
+        _getRandomTeacher(),
+        if (Random().nextDouble() > 0.7) _getRandomTeacher(),
+      ],
+      [_getRandomGroup()],
+    );
+
+SpecialHourType? _getSpecialHourType() => Random().nextDouble() < 0.2
+    ? null
+    : SpecialHourType.values[Random().nextInt(SpecialHourType.values.length)];
 
 const _subjects = [
   'MAT',

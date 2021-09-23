@@ -16,12 +16,9 @@ class SettingsTab extends StatelessWidget {
             shrinkWrap: true,
             padding: const EdgeInsets.all(15),
             children: [
-              const Text(
+              Text(
                 'Nastavitve',
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.w300,
-                ),
+                style: Theme.of(context).textTheme.headline4,
               ),
               const SizedBox(height: 15),
               const _TokenInfo(),

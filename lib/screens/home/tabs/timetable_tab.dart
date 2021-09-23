@@ -34,52 +34,34 @@ class _TimeTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) => RefreshIndicator(
         onRefresh: () => context.read<TimeTableCubit>().refresh(),
-        child: ListView(
-          children: [
-            const _DateNavigator(),
-            BlocConsumer<TimeTableCubit, TimeTableState>(
-              listener: (context, state) {
-                if (state is TimeTableError) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(state.error),
-                    ),
-                  );
-                }
-              },
-              builder: (context, state) {
-                if (state is TimeTableLoading) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-
-                if (state is TimeTableLoaded) {
-                  return Padding(
-                    padding: const EdgeInsets.only(
-                      left: 15,
-                      right: 15,
-                      bottom: 15,
-                    ),
-                    child: Column(
-                      children: [
-                        // TODO Events
-                        ...state.timeTable.schoolHourEvents
-                            .group((e) => e.timeFrom)
-                            .map((e) => HourEventsCard(events: e)),
-                      ],
-                    ),
-                  );
-                }
-
-                return ListView(
-                  children: const [
-                    Center(child: Icon(Icons.error)),
-                  ],
-                );
-              },
-            )
-          ],
+        child: BlocConsumer<TimeTableCubit, TimeTableState>(
+          listener: (context, state) {
+            if (state is TimeTableError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.error),
+                ),
+              );
+            }
+          },
+          builder: (context, state) => ListView(
+            padding: const EdgeInsets.all(15),
+            children: [
+              const _DateNavigator(),
+              const SizedBox(height: 5),
+              if (state is TimeTableLoading)
+                const Center(
+                  child: CircularProgressIndicator(),
+                )
+              else if (state is TimeTableLoaded)
+                // TODO Events
+                ...state.timeTable.schoolHourEvents
+                    .group((e) => e.timeFrom)
+                    .map((e) => HourEventsCard(events: e))
+              else
+                const Center(child: Icon(Icons.error)),
+            ],
+          ),
         ),
       );
 }
@@ -89,10 +71,11 @@ class _DateNavigator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(5),
         child: Row(
           children: [
             IconButton(
+              splashRadius: 30,
               onPressed: () => context.read<DateSelectorCubit>().prevDay(),
               icon: const Icon(Icons.chevron_left),
             ),
@@ -105,6 +88,7 @@ class _DateNavigator extends StatelessWidget {
               ),
             ),
             IconButton(
+              splashRadius: 30,
               onPressed: () => context.read<DateSelectorCubit>().nextDay(),
               icon: const Icon(Icons.chevron_right),
             ),
