@@ -10,25 +10,44 @@ class TokenDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) => BlocProvider(
         create: (context) => LoginCubit(context.read<AuthCubit>()),
-        child: AlertDialog(
-          title: const Text('Token login'),
-          content: BlocBuilder<LoginCubit, LoginState>(
-            builder: (context, state) => TextFormField(
-              initialValue: state.token,
-              onChanged: (value) => context.read<LoginCubit>().setToken(value),
-            ),
-          ),
-          actions: [
-            BlocBuilder<LoginCubit, LoginState>(
-              builder: (context, state) => ElevatedButton(
-                onPressed: state.token.isNotEmpty &&
-                        !state.status.isSubmissionInProgress
-                    ? () => context.read<LoginCubit>().submitToken()
-                    : null,
-                child: const Text('Prijava'),
+        child: BlocListener<LoginCubit, LoginState>(
+          listener: (context, state) {
+            if (state.status.isSubmissionFailure) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.error),
+                  backgroundColor: Colors.red,
+                  duration: const Duration(seconds: 10),
+                ),
+              );
+              Navigator.pop(context);
+            }
+          },
+          child: AlertDialog(
+            title: const Text('Token login'),
+            content: BlocBuilder<LoginCubit, LoginState>(
+              builder: (context, state) => TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Token',
+                  border: OutlineInputBorder(),
+                ),
+                initialValue: state.token,
+                maxLines: 4,
+                onChanged: (val) => context.read<LoginCubit>().setToken(val),
               ),
             ),
-          ],
+            actions: [
+              BlocBuilder<LoginCubit, LoginState>(
+                builder: (context, state) => ElevatedButton(
+                  onPressed: state.token.isNotEmpty &&
+                          !state.status.isSubmissionInProgress
+                      ? () => context.read<LoginCubit>().submitToken()
+                      : null,
+                  child: const Text('Prijava'),
+                ),
+              ),
+            ],
+          ),
         ),
       );
 }

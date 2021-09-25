@@ -95,7 +95,7 @@ class _TokenInfoState extends State<_TokenInfo> {
                   Expanded(
                     child: SelectableText(
                       _getToken(context),
-                      maxLines: 3,
+                      maxLines: 4,
                     ),
                   ),
                   TextButton.icon(
