@@ -1,4 +1,4 @@
-import 'package:easistent_client/easistent_client.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:o_asistent/components/hour_event_card.dart';
@@ -69,38 +69,32 @@ class _TimeTableCard extends StatelessWidget {
     final now = DateTime.now();
 
     final grouped = state.timeTable.schoolHourEvents.group((e) => e.timeFrom);
-    final current = grouped.cast<List<SchoolHourEvent>?>().firstWhere(
-          (e) => e!.first.timeFrom.isBefore(now) && e.first.timeTo.isAfter(now),
-          orElse: () => null,
-        );
-    final next = grouped.cast<List<SchoolHourEvent>?>().firstWhere(
-          (e) => e!.first.timeFrom.isAfter(now),
-          orElse: () => null,
-        );
+    final current = grouped.firstWhereOrNull(
+      (e) => e.first.timeFrom.isBefore(now) && e.first.timeTo.isAfter(now),
+    );
+    final next = grouped.firstWhereOrNull(
+      (e) => e.first.timeFrom.isAfter(now),
+    );
 
     return Card(
       elevation: 3,
-      child: ClipRRect(
-        borderRadius:
-            (Theme.of(context).cardTheme.shape as RoundedRectangleBorder)
-                .borderRadius as BorderRadius,
-        child: DefaultTextStyle(
-          style: TextStyle(color: Colors.grey.shade800),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (current != null) HourEventsContainer(events: current),
-              if (next != null) HourEventsContainer(events: next),
-              if (current == null && next == null)
-                Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: Text(
-                    'Danes nimaš več ur',
-                    style: TextStyle(color: Colors.grey.shade700),
-                  ),
+      clipBehavior: Clip.antiAlias,
+      child: DefaultTextStyle(
+        style: TextStyle(color: Colors.grey.shade800),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (current != null) HourEventsContainer(events: current),
+            if (next != null) HourEventsContainer(events: next),
+            if (current == null && next == null)
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: Text(
+                  'Danes nimaš več ur',
+                  style: TextStyle(color: Colors.grey.shade700),
                 ),
-            ],
-          ),
+              ),
+          ],
         ),
       ),
     );

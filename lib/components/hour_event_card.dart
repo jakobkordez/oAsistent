@@ -44,12 +44,8 @@ class HourEventCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Card(
         shadowColor: event.color,
-        child: ClipRRect(
-          borderRadius:
-              (Theme.of(context).cardTheme.shape as RoundedRectangleBorder)
-                  .borderRadius as BorderRadius,
-          child: HourEventContainer(event: event),
-        ),
+        clipBehavior: Clip.antiAlias,
+        child: HourEventContainer(event: event),
       );
 }
 
