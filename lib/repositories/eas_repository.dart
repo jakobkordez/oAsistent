@@ -14,13 +14,12 @@ class EAsRepository {
     bool clearCache = false,
   ]) async {
     if (_login.accessToken.isExpired()) {
-      _login = await EAsClient.refreshToken(_login);
+      _authCubit.logout();
+      // _login = await EAsClient.refreshToken(_login);
     }
 
     return await _client.getTimeTable(_login, date, clearCache);
   }
 
   Login get _login => (_authCubit.state as AuthSuccessful).login;
-
-  set _login(Login login) => _authCubit.setLogin(login);
 }

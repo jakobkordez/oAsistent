@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,8 +21,10 @@ class SettingsTab extends StatelessWidget {
                 'Nastavitve',
                 style: Theme.of(context).textTheme.headline4,
               ),
-              const SizedBox(height: 15),
-              const _TokenInfo(),
+              if (kDebugMode) ...[
+                const SizedBox(height: 15),
+                const _TokenInfo(),
+              ],
               const SizedBox(height: 15),
               TextButton(
                 child: const Text('Odjava'),
